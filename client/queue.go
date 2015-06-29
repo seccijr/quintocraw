@@ -6,6 +6,7 @@ import (
 	"github.com/seccijr/quintocrawl/parser"
 	"net/http"
 	"net/url"
+	"github.com/jackdanger/collectlinks"
 )
 
 type State struct {
@@ -68,22 +69,9 @@ func enqueue(uri string, queue chan string, requests <-chan map[string]bool, upd
 	links := parser.Host(url.Host, resp.Body)
 
 	for _, link := range links {
-		absolute := fixUrl(link, uri)
+		absolute := parser.FixUrl(link, uri)
 		if uri != "" && !visited[absolute] && absolute != uri {
 			go func() {queue <- absolute}()
 		}
 	}
-}
-
-func fixUrl(href, base string) string {
-	uri, err := url.Parse(href)
-	if err != nil {
-		return ""
-	}
-	baseUrl, err := url.Parse(base)
-	if err != nil {
-		return ""
-	}
-	uri = baseUrl.ResolveReference(uri)
-	return uri.String()
 }
