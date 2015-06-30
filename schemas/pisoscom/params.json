@@ -1,0 +1,35 @@
+{
+  "Generator": {
+    "Url": {
+      "Path": "SubHome/GetURLCalculada",
+      "RawQuery": "tipo=F002&operacion=OPERATION&zona=E00000000000034A00000000000001P000000000000PROVINCE",
+      "Host": "www.pisos.com",
+      "Scheme": "http"
+    },
+    "Params": {
+      "Operation": {
+        "PlaceHolder": "OPERATION",
+        "Values": {
+          "Sale": "1",
+          "ResidentialRent": "2",
+          "HolidaysRent": "3",
+          "RentToOwn": "4",
+          "Rent": "6"
+        }
+      },
+      "Province": {
+        "PlaceHolder": "PROVINCE",
+        "Values": {
+          "Range": {
+            "Start": 1,
+            "End": 52
+          }
+        }
+      }
+    }
+  },
+  "Base": {
+    "Host": "www.pisos.com",
+    "Scheme": "http"
+  }
+}

@@ -6,17 +6,20 @@ import (
 	"github.com/seccijr/quintocrawl/parser"
 	"net/http"
 	"net/url"
-	"github.com/jackdanger/collectlinks"
 )
+
+var queue chan string
+var requests chan map[string]bool
+var updates chan *State
 
 type State struct {
 	url    string
 	status bool
 }
 
-func visitedMonitor() (<-chan map[string]bool, chan <- *State) {
-	updates := make(chan *State)
-	requests := make(chan map[string]bool)
+func visitedMonitor() {
+	updates = make(chan *State)
+	requests = make(chan map[string]bool)
 	urlStatus := make(map[string]bool)
 	go func() {
 		for {
@@ -32,17 +35,16 @@ func visitedMonitor() (<-chan map[string]bool, chan <- *State) {
 }
 
 func Page(url string) {
-	queue := make(chan string)
-	requests, updates := visitedMonitor()
+	queue = make(chan string)
 
 	go func() { queue <- url }()
 
 	for uri := range queue {
-		enqueue(uri, queue, requests, updates)
+		enqueue(uri)
 	}
 }
 
-func enqueue(uri string, queue chan string, requests <-chan map[string]bool, updates chan <- *State) {
+func enqueue(uri string) {
 	fmt.Println("Fetching", uri)
 	visited := <-requests
 	if (visited[uri]) {

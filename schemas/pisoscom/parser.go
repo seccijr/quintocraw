@@ -1,11 +1,16 @@
-package parser
+package pisoscom
 
 import (
-	"code.google.com/p/go.net/html"
 	"io"
+	"code.google.com/p/go.net/html"
+	"github.com/seccijr/quintocrawl/model"
 	"net/url"
 	"log"
 )
+
+type PCParser struct {
+	flats model.FlatRepo
+}
 
 func sameHost(name string, href string) bool {
 	url, err := url.Parse(href)
@@ -19,7 +24,7 @@ func sameHost(name string, href string) bool {
 	return false
 }
 
-func Host(name string, httpBody io.Reader) []string {
+func (parser *PCParser) Page(httpBody io.Reader) []string {
 	links := make([]string, 0)
 	page := html.NewTokenizer(httpBody)
 	for {
@@ -37,17 +42,3 @@ func Host(name string, httpBody io.Reader) []string {
 		}
 	}
 }
-
-func FixUrl(href, base string) string {
-	uri, err := url.Parse(href)
-	if err != nil {
-		return ""
-	}
-	baseUrl, err := url.Parse(base)
-	if err != nil {
-		return ""
-	}
-	uri = baseUrl.ResolveReference(uri)
-	return uri.String()
-}
-
