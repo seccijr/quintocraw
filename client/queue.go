@@ -3,30 +3,26 @@ package client
 import (
 	"crypto/tls"
 	"fmt"
-	"github.com/seccijr/quintocrawl/parser"
 	"net/http"
-	"net/url"
 )
 
-var queue chan string
-var requests chan map[string]bool
-var updates chan *State
-
-type State struct {
-	url    string
-	status bool
+type Queue struct {
+	brokers  chan Broker
+	requests chan map[string]bool
+	updates  chan string
 }
 
 func visitedMonitor() {
-	updates = make(chan *State)
-	requests = make(chan map[string]bool)
+	requests := make(chan map[string]bool)
+	updates := make(chan string)
 	urlStatus := make(map[string]bool)
+
 	go func() {
 		for {
 			select {
 			case requests <- urlStatus:
-			case state := <-updates:
-				urlStatus[state.url] = state.status
+			case url := <-updates:
+				urlStatus[url] = true
 			}
 		}
 	}()
@@ -34,46 +30,49 @@ func visitedMonitor() {
 	return requests, updates
 }
 
-func Page(url string) {
-	queue = make(chan string)
-
-	go func() { queue <- url }()
-
-	for uri := range queue {
-		enqueue(uri)
-	}
-}
-
-func enqueue(uri string) {
+func enqueue(broker Broker, queue Queue) {
+	uri := broker.URL()
 	fmt.Println("Fetching", uri)
-	visited := <-requests
+	visited := <-queue.requests
 	if (visited[uri]) {
 		return
 	}
-	updates <- &State{url: uri, status: true}
+	queue.updates <- uri
 	transport := &http.Transport{
 		TLSClientConfig: &tls.Config{
 			InsecureSkipVerify: true,
 		},
 	}
-	client := http.Client{Transport: transport}
-	resp, err := client.Get(uri)
+	hc := http.Client{Transport: transport}
+	resp, err := hc.Get(uri)
 	if err != nil {
 		return
 	}
 	defer resp.Body.Close()
 
-	url, err := url.Parse(uri)
-	if (err != nil) {
-		return
-	}
+	brokers, _ := broker.Parse(resp.Body)
 
-	links := parser.Host(url.Host, resp.Body)
-
-	for _, link := range links {
-		absolute := parser.FixUrl(link, uri)
+	for subroker := range brokers {
+		absolute := FixUrl(subroker.URL(), uri)
 		if uri != "" && !visited[absolute] && absolute != uri {
-			go func() {queue <- absolute}()
+			go func() {queue.brokers <- subroker}()
 		}
+	}
+}
+
+func New() *Queue {
+	brokers := make(chan Broker)
+	requests, updates := visitedMonitor()
+	q := &Queue{brokers: brokers, requests: requests, updates: updates}
+
+	return q
+}
+
+func (queue *Queue) Handle(broker Broker) {
+
+	go func() { queue.brokers <- broker }()
+
+	for broker := range queue.brokers {
+		enqueue(broker, queue)
 	}
 }

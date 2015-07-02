@@ -1,6 +1,10 @@
 package pisoscom
 
-import "net/url"
+import (
+	"encoding/json"
+	"os"
+	"net/url"
+)
 
 type PCParamValueRange struct {
 	Start int
@@ -34,4 +38,13 @@ type PCGenerator struct {
 type PCConfig struct {
 	Generator PCGenerator
 	Base      url.URL
+}
+
+func ReadConfig(fn string) (PCConfig, error) {
+	file, _ := os.Open(fn)
+	decoder := json.NewDecoder(file)
+	cfg := PCConfig{}
+	err := decoder.Decode(&cfg)
+
+	return cfg, err
 }
