@@ -11,7 +11,7 @@ type Broker interface {
 	// It returns the URL addresses that may follow for the current page.
 	// The policies defined to choose between which address may be followed
 	// are handled internally in the Broker.
-	Parse(httpBody io.Reader) ([]*Broker, error)
+	Parse(httpBody io.Reader) ([]Broker, error)
 	// Gets the page to crawl
 	URL() string
 }

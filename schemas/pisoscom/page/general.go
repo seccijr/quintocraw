@@ -10,7 +10,7 @@ const PROV_SELECT = ".zonas.clearfix a[class=\"\"]"
 const MAIN_ZONE_SELECT = ".mainZones a"
 
 type PCDoc struct {
-	dom goquery.Document
+	dom *goquery.Document
 }
 
 func NewDocFromReader(body io.Reader) (*PCDoc, error) {
@@ -19,10 +19,10 @@ func NewDocFromReader(body io.Reader) (*PCDoc, error) {
 		return nil, err
 	}
 
-	return &PCDoc{dom: doc}
+	return &PCDoc{dom: doc}, nil
 }
 
-func has(dom goquery.Document, selector string) (bool, error) {
+func has(dom *goquery.Document, selector string) (bool, error) {
 	chd := dom.Has(selector)
 	if chd != nil {
 		return true, nil
@@ -31,16 +31,16 @@ func has(dom goquery.Document, selector string) (bool, error) {
 	return false, nil
 }
 
-func getLinks(dom goquery.Document, selector string) ([]string, error) {
-	links := make([]string)
+func getLinks(dom *goquery.Document, selector string) ([]string, error) {
+	var links []string
 	dom.Find(selector).Each(func(i int, s *goquery.Selection) {
 		href, hasHref := s.Attr("href")
 		if hasHref {
-			links = append(href)
+			links = append(links, href)
 		}
 	})
 
-	return links
+	return links, nil
 }
 
 func (doc *PCDoc) HasStates() (bool, error) {

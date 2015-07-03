@@ -2,8 +2,8 @@ package client
 
 import (
 	"crypto/tls"
-	"fmt"
 	"net/http"
+	"fmt"
 )
 
 type Queue struct {
@@ -12,7 +12,7 @@ type Queue struct {
 	updates  chan string
 }
 
-func visitedMonitor() {
+func visitedMonitor() (chan map[string]bool, chan string) {
 	requests := make(chan map[string]bool)
 	updates := make(chan string)
 	urlStatus := make(map[string]bool)
@@ -30,9 +30,9 @@ func visitedMonitor() {
 	return requests, updates
 }
 
-func enqueue(broker Broker, queue Queue) {
+func enqueue(broker Broker, queue *Queue) {
 	uri := broker.URL()
-	fmt.Println("Fetching", uri)
+	fmt.Println("Visiting", uri)
 	visited := <-queue.requests
 	if (visited[uri]) {
 		return
@@ -52,10 +52,12 @@ func enqueue(broker Broker, queue Queue) {
 
 	brokers, _ := broker.Parse(resp.Body)
 
-	for subroker := range brokers {
-		absolute := FixUrl(subroker.URL(), uri)
-		if uri != "" && !visited[absolute] && absolute != uri {
-			go func() {queue.brokers <- subroker}()
+	for _, subroker := range brokers {
+		newUri := subroker.URL()
+		if !visited[newUri] && newUri != uri {
+			go func(splitbroker Broker) {
+				queue.brokers <- splitbroker
+			}(subroker)
 		}
 	}
 }

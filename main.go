@@ -13,13 +13,10 @@ func main() {
 
 	if err != nil {
 		fmt.Println("Error reading Pisos.com config")
-		return -1
 	}
 
 	pcUrl := pcConfig.Base.String()
-	pcBroker := pisoscom.PCBroker{flats: flatsRepo, url: pcUrl}
+	pcBroker := &pisoscom.PCBroker{flatsRepo, pcUrl, "/"}
 	client := client.New()
 	client.Handle(pcBroker)
-
-	return 0
 }

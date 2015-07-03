@@ -21,8 +21,4 @@ type FlatRepo interface {
 	Save(Flat) error
 	FindAllByAddress(string, FlatReact) error
 	FindByAddress(string, int, int, FlatReact) error
-	FindAllByDistrict(string, FlatReact) error
-	FindByDistrict(string, int, int, FlatReact) error
-	FindAllByCity(string, FlatReact) error
-	FindByCity(string, int, int, FlatReact) error
 }

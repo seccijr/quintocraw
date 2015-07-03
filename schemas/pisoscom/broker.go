@@ -9,11 +9,12 @@ import (
 )
 
 type PCBroker struct {
-	flats    model.FlatRepo
-	url string
+	Flats model.FlatRepo
+	Base  string
+	Url   string
 }
 
-func (broker *PCBroker) Parse(httpBody io.Reader) []*client.Broker {
+func (broker PCBroker) Parse(httpBody io.Reader) ([]client.Broker, error) {
 	var links []string
 	var brokers []client.Broker
 	pcg, err := page.NewDocFromReader(httpBody)
@@ -23,22 +24,27 @@ func (broker *PCBroker) Parse(httpBody io.Reader) []*client.Broker {
 		return nil, err
 	}
 
+	wStates, _ := pcg.HasStates()
+	wProvinces, _ := pcg.HasProvinces()
+
 	switch {
-	case pcg.HasStates():
+	case wStates:
 		links, _ = pcg.GetStateLinks()
 		break
-	case pcg.HasProvinces():
+	case wProvinces:
 		links, _ = pcg.GetProvinceLinks()
 		break
 	}
 
-	for link := range links {
-		brokers = append(&PCBroker{flats: broker.flats, url: link})
+	for _, link := range links {
+		newBroker := PCBroker{broker.Flats, broker.Base, link}
+		brokers = append(brokers, &newBroker)
 	}
 
 	return brokers, nil
 }
 
-func (broker *PCBroker) URL() string {
-	return broker.url
+func (broker PCBroker) URL() string {
+	newUrl := client.FixUrl(broker.Url, broker.Base)
+	return newUrl
 }
