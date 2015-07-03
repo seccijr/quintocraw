@@ -2,8 +2,10 @@ package pisoscom
 
 import (
 	"io"
-	"code.google.com/p/go.net/html"
+	"log"
 	"github.com/seccijr/quintocrawl/model"
+	"github.com/seccijr/quintocrawl/schemas/pisoscom/page"
+	"github.com/seccijr/quintocrawl/client"
 )
 
 type PCBroker struct {
@@ -11,23 +13,30 @@ type PCBroker struct {
 	url string
 }
 
-func (broker *PCBroker) Parse(httpBody io.Reader) []string {
-	links := make([]string, 0)
-	page := html.NewTokenizer(httpBody)
-	for {
-		tokenType := page.Next()
-		if tokenType == html.ErrorToken {
-			return links
-		}
-		token := page.Token()
-		if tokenType == html.StartTagToken && token.DataAtom.String() == "a" {
-			for _, attr := range token.Attr {
-				if attr.Key == "href" {
-					links = append(links, attr.Val)
-				}
-			}
-		}
+func (broker *PCBroker) Parse(httpBody io.Reader) []*client.Broker {
+	var links []string
+	var brokers []client.Broker
+	pcg, err := page.NewDocFromReader(httpBody)
+
+	if err != nil {
+		log.Fatal(err)
+		return nil, err
 	}
+
+	switch {
+	case pcg.HasStates():
+		links, _ = pcg.GetStateLinks()
+		break
+	case pcg.HasProvinces():
+		links, _ = pcg.GetProvinceLinks()
+		break
+	}
+
+	for link := range links {
+		brokers = append(&PCBroker{flats: broker.flats, url: link})
+	}
+
+	return brokers, nil
 }
 
 func (broker *PCBroker) URL() string {
