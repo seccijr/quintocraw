@@ -1,14 +1,22 @@
 package main
 
 import (
-	"github.com/seccijr/quintocrawl/client"
-	"github.com/seccijr/quintocrawl/schemas/pisoscom"
-	"github.com/seccijr/quintocrawl/model/mongo"
 	"fmt"
+	"gopkg.in/mgo.v2"
+	"github.com/seccijr/quintocrawl/model/mongo"
+	"github.com/seccijr/quintocrawl/schemas/pisoscom"
+	"github.com/seccijr/quintocrawl/client"
 )
 
 func main() {
-	flatsRepo := mongo.MFlatRepo{}
+	session, err := mgo.Dial("localhost")
+	if err != nil {
+		panic(err)
+	}
+	defer session.Close()
+	session.SetMode(mgo.Monotonic, true)
+	c := session.DB("test").C("flat")
+	flatsRepo := mongo.MFlatRepo{c}
 	pcConfig, err := pisoscom.ReadConfig("schemas/pisoscom/params.json")
 
 	if err != nil {

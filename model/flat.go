@@ -4,6 +4,7 @@ type Flat struct {
 	Ref string
 	Publisher string
 	Address string
+	Telephone string
 	Price float32
 	Agency bool
 	Description string
@@ -12,7 +13,7 @@ type Flat struct {
 	Province string
 	State string
 	Country string
-	Pictures []string
+	Pictures []ImgNode
 }
 
 type FlatReact func(*Flat) error

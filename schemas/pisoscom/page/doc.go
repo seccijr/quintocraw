@@ -18,13 +18,8 @@ func NewDocFromReader(body io.Reader) (*PCDoc, error) {
 	return &PCDoc{dom: doc}, nil
 }
 
-func Has(dom *goquery.Document, selector string) (bool, error) {
-	chd := dom.Has(selector)
-	if chd != nil {
-		return true, nil
-	}
-
-	return false, nil
+func Has(dom *goquery.Document, selector string) bool {
+	return dom.Find(selector).Is(selector)
 }
 
 func GetLinks(dom *goquery.Document, selector string) ([]string, error) {

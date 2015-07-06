@@ -8,11 +8,11 @@ import (
 )
 
 type MFlatRepo struct {
-	fc mgo.Collection
+	Fc *mgo.Collection
 }
 
 func (mFlat MFlatRepo) FindByAddress(address string, skip int, limit int, cb model.FlatReact) error {
-	iter := mFlat.fc.Find(bson.M{"address": address}).Skip(skip).Limit(limit).Iter()
+	iter := mFlat.Fc.Find(bson.M{"address": address}).Skip(skip).Limit(limit).Iter()
 	flat := &model.Flat{}
 
 	for iter.Next(flat) {
@@ -30,7 +30,7 @@ func (mFlat MFlatRepo) FindAllByAddress(address string, cb model.FlatReact) erro
 }
 
 func (mFlat MFlatRepo) Save(flat model.Flat) error {
-	_, err := mFlat.fc.Upsert(bson.M{"ref": flat.Ref}, flat)
+	_, err := mFlat.Fc.Upsert(bson.M{"ref": flat.Ref}, flat)
 
 	return err
 }

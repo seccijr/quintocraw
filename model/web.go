@@ -7,8 +7,8 @@ type ImgNode struct {
 	Comment string
 }
 
-func ToImgNode(s *goquery.Selection) *ImgNode {
-	imgNode := &ImgNode{}
+func ToImgNode(s *goquery.Selection) ImgNode {
+	imgNode := ImgNode{}
 	if src, hasSrc := s.Attr("src"); hasSrc {
 		imgNode.Src = src
 	}

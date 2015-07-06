@@ -3,7 +3,6 @@ package client
 import (
 	"crypto/tls"
 	"net/http"
-	"fmt"
 )
 
 type Queue struct {
@@ -32,7 +31,6 @@ func visitedMonitor() (chan map[string]bool, chan string) {
 
 func enqueue(broker Broker, queue *Queue) {
 	uri := broker.URL()
-	fmt.Println("Visiting", uri)
 	visited := <-queue.requests
 	if (visited[uri]) {
 		return

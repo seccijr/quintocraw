@@ -6,6 +6,7 @@ import (
 	"github.com/seccijr/quintocrawl/model"
 	"github.com/seccijr/quintocrawl/schemas/pisoscom/page"
 	"github.com/seccijr/quintocrawl/client"
+	"fmt"
 )
 
 type PCBroker struct {
@@ -23,7 +24,7 @@ func (broker PCBroker) Parse(httpBody io.Reader) ([]client.Broker, error) {
 		return nil, err
 	}
 
-	links := hub(pcg)
+	links := broker.hub(pcg)
 	for _, link := range links {
 		newBroker := PCBroker{broker.Flats, broker.Base, link}
 		brokers = append(brokers, &newBroker)
@@ -32,7 +33,7 @@ func (broker PCBroker) Parse(httpBody io.Reader) ([]client.Broker, error) {
 	return brokers, nil
 }
 
-func hub(pcg *page.PCDoc) []string {
+func (broker PCBroker) hub(pcg *page.PCDoc) []string {
 	var links []string
 
 	switch {
@@ -49,7 +50,15 @@ func hub(pcg *page.PCDoc) []string {
 		links, _ = pcg.GetAdvLinks()
 		break
 	case pcg.IsDetail():
-		links, _ = pcg.ParseDetail()
+		var err error
+		var flat model.Flat
+		flat, err = pcg.ParseDetail()
+		if err == nil {
+			err = broker.Flats.Save(flat)
+		}
+		if err != nil {
+			fmt.Println(err)
+		}
 		break
 	}
 
