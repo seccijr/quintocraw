@@ -71,10 +71,13 @@ func New() *Queue {
 }
 
 func (queue *Queue) Handle(broker Broker) {
-
 	go func() { queue.brokers <- broker }()
+}
 
+func (queue *Queue) Run() {
 	for broker := range queue.brokers {
-		enqueue(broker, queue)
+		go func (splitbroker Broker) {
+			enqueue(splitbroker, queue)
+		} (broker)
 	}
 }

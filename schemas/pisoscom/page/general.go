@@ -1,60 +1,52 @@
 package page
 
 import (
-	"io"
 	"github.com/PuerkitoBio/goquery"
 )
 
 const STATE_SELECT = ".zonas.clearfix a.bold"
 const PROV_SELECT = ".zonas.clearfix a[class=\"\"]"
-const MAIN_ZONE_SELECT = ".mainZones a"
+const ZONE_SELECT = ".zoneList a"
+const ADV_SELECT = ".gridList a.anuncioLink"
+const DETAIL_SELECT = ".content.Detalle"
 
-type PCDoc struct {
-	dom *goquery.Document
+func (doc *PCDoc) HasStates() bool {
+	wStates, _ := Has(doc.dom, STATE_SELECT)
+	return wStates
 }
 
-func NewDocFromReader(body io.Reader) (*PCDoc, error) {
-	doc, err := goquery.NewDocumentFromReader(body)
-	if err != nil {
-		return nil, err
-	}
-
-	return &PCDoc{dom: doc}, nil
+func (doc *PCDoc) HasProvinces() bool {
+	wProvinces, _ := Has(doc.dom, PROV_SELECT)
+	return wProvinces
 }
 
-func has(dom *goquery.Document, selector string) (bool, error) {
-	chd := dom.Has(selector)
-	if chd != nil {
-		return true, nil
-	}
-
-	return false, nil
+func (doc *PCDoc) HasZones() bool {
+	wCounties , _ := Has(doc.dom, ZONE_SELECT)
+	return wCounties
 }
 
-func getLinks(dom *goquery.Document, selector string) ([]string, error) {
-	var links []string
-	dom.Find(selector).Each(func(i int, s *goquery.Selection) {
-		href, hasHref := s.Attr("href")
-		if hasHref {
-			links = append(links, href)
-		}
-	})
-
-	return links, nil
+func (doc *PCDoc) HasAds() bool {
+	wMainZone, _ := Has(doc.dom, ADV_SELECT)
+	return wMainZone
 }
 
-func (doc *PCDoc) HasStates() (bool, error) {
-	return has(doc.dom, STATE_SELECT)
-}
-
-func (doc *PCDoc) HasProvinces() (bool, error) {
-	return has(doc.dom, PROV_SELECT)
+func (doc *PCDoc) IsDetail() bool {
+	wMainZone, _ := Has(doc.dom, DETAIL_SELECT)
+	return wMainZone
 }
 
 func (doc *PCDoc) GetStateLinks() ([]string, error) {
-	return getLinks(doc.dom, STATE_SELECT)
+	return GetLinks(doc.dom, STATE_SELECT)
 }
 
 func (doc *PCDoc) GetProvinceLinks() ([]string, error) {
-	return getLinks(doc.dom, PROV_SELECT)
+	return GetLinks(doc.dom, PROV_SELECT)
+}
+
+func (doc *PCDoc) GetZoneLinks() ([]string, error) {
+	return GetLinks(doc.dom, ZONE_SELECT)
+}
+
+func (doc *PCDoc) GetAdvLinks() ([]string, error) {
+	return GetLinks(doc.dom, ADV_SELECT)
 }

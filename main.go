@@ -19,4 +19,5 @@ func main() {
 	pcBroker := &pisoscom.PCBroker{flatsRepo, pcUrl, "/"}
 	client := client.New()
 	client.Handle(pcBroker)
+	client.Run()
 }

@@ -15,7 +15,6 @@ type PCBroker struct {
 }
 
 func (broker PCBroker) Parse(httpBody io.Reader) ([]client.Broker, error) {
-	var links []string
 	var brokers []client.Broker
 	pcg, err := page.NewDocFromReader(httpBody)
 
@@ -24,24 +23,37 @@ func (broker PCBroker) Parse(httpBody io.Reader) ([]client.Broker, error) {
 		return nil, err
 	}
 
-	wStates, _ := pcg.HasStates()
-	wProvinces, _ := pcg.HasProvinces()
-
-	switch {
-	case wStates:
-		links, _ = pcg.GetStateLinks()
-		break
-	case wProvinces:
-		links, _ = pcg.GetProvinceLinks()
-		break
-	}
-
+	links := hub(pcg)
 	for _, link := range links {
 		newBroker := PCBroker{broker.Flats, broker.Base, link}
 		brokers = append(brokers, &newBroker)
 	}
 
 	return brokers, nil
+}
+
+func hub(pcg *page.PCDoc) []string {
+	var links []string
+
+	switch {
+	case pcg.HasStates():
+		links, _ = pcg.GetStateLinks()
+		break
+	case pcg.HasProvinces():
+		links, _ = pcg.GetProvinceLinks()
+		break
+	case pcg.HasZones():
+		links, _ = pcg.GetZoneLinks()
+		break
+	case pcg.HasAds():
+		links, _ = pcg.GetAdvLinks()
+		break
+	case pcg.IsDetail():
+		links, _ = pcg.ParseDetail()
+		break
+	}
+
+	return links
 }
 
 func (broker PCBroker) URL() string {
