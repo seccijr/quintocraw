@@ -6,12 +6,13 @@ import (
 	"encoding/base64"
 	"errors"
 	"regexp"
+	"fmt"
 )
 
 const THUMB_SELECT = ".frame.slideShow img"
 const PHOTO_URL_PRE = "http://fotos.imghs.net/"
 const PHOTO_REGEXP = "(s|m|l|xl)"
-const TELF_SELECT = "#tlfEnc"
+const TELF_SELECT = "[id='tlfEnc']"
 const INMO_SELECT = ".line.noMargin a[href^='/inmobiliaria']"
 const DESC_BOD_SELECT = ".descriptionBlock .description"
 
@@ -54,7 +55,9 @@ func getPhotosFromThumbs(thumbs []model.ImgNode) ([]model.ImgNode, error) {
 }
 
 func decTelf(dom *goquery.Document) (string, error) {
-	val, exists := dom.Find(TELF_SELECT).First().Attr("value")
+	telElem := dom.Find(TELF_SELECT).First()
+	fmt.Println(telElem)
+	val, exists := telElem.Attr("value")
 	if !exists {
 		return "", errors.New("No matching telephone")
 	}
