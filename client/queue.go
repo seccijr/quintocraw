@@ -3,11 +3,14 @@ package client
 import (
 	"crypto/tls"
 	"net/http"
+	"fmt"
+	"runtime"
 )
 
-const MAX_BROKERS = 64
+const MAX_BROKERS = 2048
 
 type Queue struct {
+	pool	 chan int
 	brokers  chan Broker
 	requests chan map[string]bool
 	updates  chan string
@@ -37,6 +40,8 @@ func enqueue(broker Broker, queue *Queue) {
 	if (visited[uri]) {
 		return
 	}
+	fmt.Println("Goroutines:", runtime.NumGoroutine(), "Fetching:", uri)
+
 	queue.updates <- uri
 	transport := &http.Transport{
 		TLSClientConfig: &tls.Config{
@@ -48,22 +53,22 @@ func enqueue(broker Broker, queue *Queue) {
 	if err != nil {
 		return
 	}
+	defer resp.Body.Close()
 
 	brokers, _ := broker.Parse(resp.Body)
-	resp.Body.Close()
-
 	for _, subroker := range brokers {
 		newUri := subroker.URL()
 		if !visited[newUri] && newUri != uri {
-			queue.brokers <- subroker
+			queue.Handle(subroker)
 		}
 	}
 }
 
 func New() *Queue {
-	brokers := make(chan Broker, MAX_BROKERS)
+	brokers := make(chan Broker)
+	pool := make(chan int, MAX_BROKERS)
 	requests, updates := visitedMonitor()
-	q := &Queue{brokers: brokers, requests: requests, updates: updates}
+	q := &Queue{pool, brokers, requests, updates}
 
 	return q
 }
@@ -74,8 +79,10 @@ func (queue *Queue) Handle(broker Broker) {
 
 func (queue *Queue) Run() {
 	for broker := range queue.brokers {
+		queue.pool <- 1
 		go func(splitbroker Broker) {
 			enqueue(splitbroker, queue)
+			<- queue.pool
 		}(broker)
 	}
 }
