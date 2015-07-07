@@ -6,13 +6,13 @@ import (
 	"encoding/base64"
 	"errors"
 	"regexp"
-	"fmt"
 )
 
 const THUMB_SELECT = ".frame.slideShow img"
 const PHOTO_URL_PRE = "http://fotos.imghs.net/"
 const PHOTO_REGEXP = "(s|m|l|xl)"
-const TELF_SELECT = "[id='tlfEnc']"
+const TELF_ENC_SELECT = "[id='tlfEnc']"
+const TELF_TXT_SELECT = ".number.one"
 const INMO_SELECT = ".line.noMargin a[href^='/inmobiliaria']"
 const DESC_BOD_SELECT = ".descriptionBlock .description"
 
@@ -55,16 +55,19 @@ func getPhotosFromThumbs(thumbs []model.ImgNode) ([]model.ImgNode, error) {
 }
 
 func decTelf(dom *goquery.Document) (string, error) {
-	telElem := dom.Find(TELF_SELECT).First()
-	fmt.Println(telElem)
-	val, exists := telElem.Attr("value")
-	if !exists {
-		return "", errors.New("No matching telephone")
-	}
-	telByte, err := base64.StdEncoding.DecodeString(val)
-	tel := string(telByte[:])
-	if err == nil {
-		return "", errors.New("Not Base64 telephone")
+	var tel string
+	if Has(dom, TELF_ENC_SELECT) {
+		val, exists := dom.Find(TELF_ENC_SELECT).First().Attr("value")
+		if !exists {
+			return "", errors.New("No matching encoded telephone")
+		}
+		telByte, err := base64.StdEncoding.DecodeString(val)
+		if err != nil {
+			return "", err
+		}
+		tel = string(telByte[:])
+	} else {
+		tel = dom.Find(TELF_TXT_SELECT).First().Text()
 	}
 
 	return tel, nil
