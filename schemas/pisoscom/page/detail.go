@@ -8,6 +8,7 @@ import (
 	"regexp"
 )
 
+const ID_SELECT = "[name*='IdPiso']"
 const THUMB_SELECT = ".frame.slideShow img"
 const PHOTO_URL_PRE = "http://fotos.imghs.net/"
 const PHOTO_REGEXP = "(s|m|l|xl)"
@@ -77,8 +78,22 @@ func descBody(dom *goquery.Document) string {
 	return dom.Find(DESC_BOD_SELECT).First().Text()
 }
 
+func getRef(dom *goquery.Document) (string, error) {
+	val, exists := dom.Find(ID_SELECT).First().Attr("value")
+	if !exists {
+		return "", errors.New("No matching ID")
+	}
+
+	return val, nil
+}
+
 func (doc *PCDoc) ParseDetail() (model.Flat, error) {
 	flat := model.Flat{}
+	ref, err := getRef(doc.dom)
+	if err != nil {
+		return flat, err
+	}
+	flat.Ref = ref
 	thumbs := getThumbs(doc.dom)
 	photos, _ := getPhotosFromThumbs(thumbs)
 	flat.Pictures = photos
