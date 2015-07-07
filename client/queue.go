@@ -5,6 +5,8 @@ import (
 	"net/http"
 )
 
+const MAX_BROKERS = 64
+
 type Queue struct {
 	brokers  chan Broker
 	requests chan map[string]bool
@@ -46,22 +48,20 @@ func enqueue(broker Broker, queue *Queue) {
 	if err != nil {
 		return
 	}
-	defer resp.Body.Close()
 
 	brokers, _ := broker.Parse(resp.Body)
+	resp.Body.Close()
 
 	for _, subroker := range brokers {
 		newUri := subroker.URL()
 		if !visited[newUri] && newUri != uri {
-			go func(splitbroker Broker) {
-				queue.brokers <- splitbroker
-			}(subroker)
+			queue.brokers <- subroker
 		}
 	}
 }
 
 func New() *Queue {
-	brokers := make(chan Broker)
+	brokers := make(chan Broker, MAX_BROKERS)
 	requests, updates := visitedMonitor()
 	q := &Queue{brokers: brokers, requests: requests, updates: updates}
 
@@ -74,8 +74,8 @@ func (queue *Queue) Handle(broker Broker) {
 
 func (queue *Queue) Run() {
 	for broker := range queue.brokers {
-		go func (splitbroker Broker) {
+		go func(splitbroker Broker) {
 			enqueue(splitbroker, queue)
-		} (broker)
+		}(broker)
 	}
 }

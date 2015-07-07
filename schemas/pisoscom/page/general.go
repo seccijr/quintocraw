@@ -1,4 +1,5 @@
 package page
+
 import (
 	"regexp"
 	"github.com/PuerkitoBio/goquery"
@@ -12,7 +13,7 @@ const PROV_SELECT = ".zonas.clearfix a[class='']"
 const ZONE_SELECT = ".zoneList a"
 const ADV_SELECT = ".gridList a.anuncioLink"
 const DETAIL_SELECT = ".content.Detalle"
-const PAG_NUM_REGEXP = "([0-9]+)/$"
+const PAG_NUM_REGEXP = "/([0-9]+)/$"
 const PAG_LAST_SELECT = ".pager a.item:nth-last-child(2)"
 
 func pageNum(url string) string {
@@ -43,7 +44,7 @@ func pageLinks(dom *goquery.Document) ([]string, error) {
 	}
 	plain := removePageNumber(url)
 	for i:= 1; i <= n; i++ {
-		links = append(links, fmt.Sprintf("%s/%d/", plain, n))
+		links = append(links, fmt.Sprintf("%s/%d/", plain, i))
 	}
 
 	return links, nil
