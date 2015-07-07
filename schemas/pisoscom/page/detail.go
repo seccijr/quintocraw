@@ -43,7 +43,7 @@ func photoFromThumb(thumb *model.ImgNode) (model.ImgNode, error) {
 	return photo, nil
 }
 
-func getPhotosFromThumbs(thumbs []model.ImgNode) ([]model.ImgNode, error) {
+func photosFromThumbs(thumbs []model.ImgNode) ([]model.ImgNode, error) {
 	var result []model.ImgNode
 
 	for _, thumb := range thumbs {
@@ -95,7 +95,7 @@ func (doc *PCDoc) ParseDetail() (model.Flat, error) {
 	}
 	flat.Ref = ref
 	thumbs := getThumbs(doc.dom)
-	photos, _ := getPhotosFromThumbs(thumbs)
+	photos, _ := photosFromThumbs(thumbs)
 	flat.Pictures = photos
 	tel, err := decTelf(doc.dom)
 	if err != nil {
