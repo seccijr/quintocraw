@@ -3,7 +3,6 @@ package client
 import (
 	"net/url"
 	"io"
-	"errors"
 )
 
 type Broker interface {
@@ -11,24 +10,9 @@ type Broker interface {
 	// It returns the URL addresses that may follow for the current page.
 	// The policies defined to choose between which address may be followed
 	// are handled internally in the Broker.
-	Parse(httpBody io.Reader) ([]Broker, error)
+	Parse(httpBody io.Reader) ([]string, error)
 	// Gets the page to crawl
-	URL() string
-}
-
-// Checks if the host of and URL matches the hostname passed as the first
-// parameter.
-func SameHost(name string, href string) error {
-	url, err := url.Parse(href)
-	if (err != nil) {
-		return err
-	}
-
-	if (url.Host != name) {
-		return errors.New("Hosts do not match")
-	}
-
-	return nil
+	Format(string) string
 }
 
 // Converts a reference from relative to absolute format.

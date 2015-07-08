@@ -16,6 +16,7 @@ const TELF_ENC_SELECT = "[id='tlfEnc']"
 const TELF_TXT_SELECT = ".number.one"
 const INMO_SELECT = ".line.noMargin a[href^='/inmobiliaria']"
 const DESC_BOD_SELECT = ".descriptionBlock .description"
+const DATA_SELECT = "div.characteristics > div.column > div.block"
 
 func tSizePhotoUrl(url string, size string) string {
 	r := regexp.MustCompile(PHOTO_URL_PRE + PHOTO_REGEXP)

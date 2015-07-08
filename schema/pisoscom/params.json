@@ -30,6 +30,7 @@
   },
   "Base": {
     "Host": "www.pisos.com",
-    "Scheme": "http"
+    "Scheme": "http",
+    "Path": "comunidad-madrid"
   }
 }

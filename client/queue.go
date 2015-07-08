@@ -1,88 +1,47 @@
 package client
 
-import (
-	"crypto/tls"
-	"net/http"
-	"fmt"
-	"runtime"
-)
-
-const MAX_BROKERS = 2048
+const MAX_BROKERS = 100000
 
 type Queue struct {
-	pool	 chan int
-	brokers  chan Broker
-	requests chan map[string]bool
-	updates  chan string
+	broker 	Broker
+	urls	chan string
+	proxy   *Proxy
 }
 
-func visitedMonitor() (chan map[string]bool, chan string) {
-	requests := make(chan map[string]bool)
-	updates := make(chan string)
-	urlStatus := make(map[string]bool)
+func fetchAndParse(url string, proxy *Proxy, broker Broker) ([]string, error) {
+	var result []string
+	body, err := proxy.Fetch(url)
+	if err != nil {
+		return result, err
+	}
+	defer body.Close()
 
+	return broker.Parse(body)
+}
+
+func (queue *Queue) Handle(url string) {
 	go func() {
-		for {
-			select {
-			case requests <- urlStatus:
-			case url := <-updates:
-				urlStatus[url] = true
-			}
+		urls, _ := fetchAndParse(url, queue.proxy, queue.broker)
+		for _, url := range urls {
+			queue.Push(queue.broker.Format(url))
 		}
 	}()
-
-	return requests, updates
 }
 
-func enqueue(broker Broker, queue *Queue) {
-	uri := broker.URL()
-	visited := <-queue.requests
-	if (visited[uri]) {
-		return
-	}
-	fmt.Println("Goroutines:", runtime.NumGoroutine(), "Fetching:", uri)
-
-	queue.updates <- uri
-	transport := &http.Transport{
-		TLSClientConfig: &tls.Config{
-			InsecureSkipVerify: true,
-		},
-	}
-	hc := http.Client{Transport: transport}
-	resp, err := hc.Get(uri)
-	if err != nil {
-		return
-	}
-	defer resp.Body.Close()
-
-	brokers, _ := broker.Parse(resp.Body)
-	for _, subroker := range brokers {
-		newUri := subroker.URL()
-		if !visited[newUri] && newUri != uri {
-			queue.Handle(subroker)
-		}
-	}
-}
-
-func New() *Queue {
-	brokers := make(chan Broker)
-	pool := make(chan int, MAX_BROKERS)
-	requests, updates := visitedMonitor()
-	q := &Queue{pool, brokers, requests, updates}
-
-	return q
-}
-
-func (queue *Queue) Handle(broker Broker) {
-	go func() { queue.brokers <- broker }()
+func (queue *Queue) Push(url string) {
+	go func() {
+		queue.urls <- url
+	}()
 }
 
 func (queue *Queue) Run() {
-	for broker := range queue.brokers {
-		queue.pool <- 1
-		go func(splitbroker Broker) {
-			enqueue(splitbroker, queue)
-			<- queue.pool
-		}(broker)
+	for url := range queue.urls {
+		queue.Handle(url)
 	}
+}
+
+func NewQueue(broker Broker) *Queue {
+	urls := make(chan string, MAX_BROKERS)
+	proxy := NewProxy()
+	return &Queue{broker, urls, proxy}
 }

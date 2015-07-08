@@ -4,7 +4,7 @@ import (
 	"io"
 	"log"
 	"github.com/seccijr/quintocrawl/model"
-	"github.com/seccijr/quintocrawl/schemas/pisoscom/page"
+	"github.com/seccijr/quintocrawl/schema/pisoscom/page"
 	"github.com/seccijr/quintocrawl/client"
 	"fmt"
 )
@@ -12,11 +12,9 @@ import (
 type PCBroker struct {
 	Flats model.FlatRepo
 	Base  string
-	Url   string
 }
 
-func (broker PCBroker) Parse(httpBody io.Reader) ([]client.Broker, error) {
-	var brokers []client.Broker
+func (broker PCBroker) Parse(httpBody io.Reader) ([]string, error) {
 	pcg, err := page.NewDocFromReader(httpBody)
 
 	if err != nil {
@@ -24,13 +22,7 @@ func (broker PCBroker) Parse(httpBody io.Reader) ([]client.Broker, error) {
 		return nil, err
 	}
 
-	links := broker.hub(pcg)
-	for _, link := range links {
-		newBroker := PCBroker{broker.Flats, broker.Base, link}
-		brokers = append(brokers, &newBroker)
-	}
-
-	return brokers, nil
+	return broker.hub(pcg), nil
 }
 
 func (broker PCBroker) hub(pcg *page.PCDoc) []string {
@@ -65,7 +57,7 @@ func (broker PCBroker) hub(pcg *page.PCDoc) []string {
 	return links
 }
 
-func (broker PCBroker) URL() string {
-	newUrl := client.FixUrl(broker.Url, broker.Base)
+func (broker PCBroker) Format(url string) string {
+	newUrl := client.FixUrl(url, broker.Base)
 	return newUrl
 }
