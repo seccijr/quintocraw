@@ -17,6 +17,8 @@ const TELF_TXT_SELECT = ".number.one"
 const INMO_SELECT = ".line.noMargin a[href^='/inmobiliaria']"
 const DESC_BOD_SELECT = ".descriptionBlock .description"
 const DATA_SELECT = "div.characteristics > div.column > div.block"
+const DATA_LINE_SELECT = "div.line"
+const DATA_LINE_REGEXP = "^(.*):"
 
 func tSizePhotoUrl(url string, size string) string {
 	r := regexp.MustCompile(PHOTO_URL_PRE + PHOTO_REGEXP)
@@ -86,6 +88,15 @@ func getRef(dom *goquery.Document) (string, error) {
 	}
 
 	return val, nil
+}
+
+func details(dom *goquery.Document) string {
+	result := make(map[string]string)
+	dom.Find(DATA_SELECT).Each(func (num int, s *goquery.Selection) {
+		line := s.Find(DATA_LINE_SELECT).First().Text()
+		rTitl := regexp.MustCompile()
+		titl :=
+	})
 }
 
 func (doc *PCDoc) ParseDetail() (model.Flat, error) {
