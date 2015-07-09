@@ -1,4 +1,5 @@
 package model
+import "time"
 
 type Flat struct {
 	Ref string
@@ -14,6 +15,15 @@ type Flat struct {
 	State string
 	Country string
 	Pictures []ImgNode
+	Equipment []string
+	Area string
+	Rooms int
+	Bathrooms int
+	Floor string
+	Exterior []string
+	Furniture []string
+	Certify string
+	Age time.Duration
 }
 
 type FlatReact func(*Flat) error

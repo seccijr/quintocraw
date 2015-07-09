@@ -6,6 +6,9 @@ import (
 	"encoding/base64"
 	"errors"
 	"regexp"
+	"strings"
+	"strconv"
+	"golang.org/x/tools/go/exact"
 )
 
 const ID_SELECT = "[name*='IdPiso']"
@@ -17,8 +20,19 @@ const TELF_TXT_SELECT = ".number.one"
 const INMO_SELECT = ".line.noMargin a[href^='/inmobiliaria']"
 const DESC_BOD_SELECT = ".descriptionBlock .description"
 const DATA_SELECT = "div.characteristics > div.column > div.block"
+const DATA_TITL_BASIC = "Datos básicos"
+const DATA_TITL_EQUIP = "Equipamiento e instalaciones"
+const DATA_TITL_CERTIFY = "Certificado energético"
+const DATA_TITL_EXT = "Exteriores"
+const DATA_TITL_FURN = "Muebles y acabados"
+const DATA_TITL_SELECT = "h5"
 const DATA_LINE_SELECT = "div.line"
-const DATA_LINE_REGEXP = "^(.*):"
+const DATA_LINE_REGEXP = "^(.*):(.*)"
+const DATA_AREA_KEY = "Superficie"
+const DATA_ROOMS_KEY = "Superficie"
+const DATA_BATHS_KEY = "Superficie"
+const DATA_AGE_KEY = "Antigüedad"
+const DATA_N_REGEXP = "\\d+"
 
 func tSizePhotoUrl(url string, size string) string {
 	r := regexp.MustCompile(PHOTO_URL_PRE + PHOTO_REGEXP)
@@ -90,13 +104,59 @@ func getRef(dom *goquery.Document) (string, error) {
 	return val, nil
 }
 
-func details(dom *goquery.Document) string {
-	result := make(map[string]string)
-	dom.Find(DATA_SELECT).Each(func (num int, s *goquery.Selection) {
-		line := s.Find(DATA_LINE_SELECT).First().Text()
-		rTitl := regexp.MustCompile()
-		titl :=
+func basicDetails(result map[string]interface{}, dom *goquery.Document) map[string]interface{} {
+	re := regexp.MustCompile(DATA_LINE_REGEXP)
+	dom.Find(DATA_LINE_SELECT).Each(func (i int, s *goquery.Selection) {
+		match := re.FindStringSubmatch(s.Text())
+		if match[1] != "" { result = append(result, match[2]) }
 	})
+
+	return result
+}
+
+func listDetails(result map[string]interface{}, key string, dom *goquery.Document) map[string]interface{} {
+	result[key] = make([]string)
+	dom.Find(DATA_LINE_SELECT).Each(func (i int, s *goquery.Selection) {
+		result[key] = append(result[key], s.Text())
+	})
+
+	return result
+}
+
+func details(dom *goquery.Document) map[string]interface{} {
+	result := make(map[string]interface{})
+	dom.Find(DATA_SELECT).Each(func (num int, s *goquery.Selection) {
+		title := s.Find(DATA_TITL_SELECT).First().Text()
+		switch {
+		case strings.Contains(title, DATA_TITL_BASIC):
+			result = basicDetails(result, s)
+		case strings.Contains(title, DATA_TITL_EQUIP):
+			result = listDetails(result, s, DATA_TITL_EQUIP)
+		case strings.Contains(title, DATA_TITL_EXT):
+			result = listDetails(result, s, DATA_TITL_EXT)
+		case strings.Contains(title, DATA_TITL_FURN):
+			result = listDetails(result, s, DATA_TITL_FURN)
+		}
+	})
+
+	return result
+}
+
+func mapDetails(flat model.Flat, raw map[string]interface{}) model.Flat {
+	re := regexp.MustCompile(DATA_N_REGEXP)
+	if area, exists := raw[DATA_AREA_KEY]; exists {
+		flat.Area = area
+	}
+	if val, exists := raw[DATA_ROOMS_KEY]; exists {
+		match := re.FindString(val)
+		n, _ := strconv.Atoi(match)
+		flat.Rooms = n
+	}
+	if val, exists := raw[DATA_BATHS_KEY]; exists {
+		match := re.FindString(val)
+		n, _ := strconv.Atoi(match)
+		flat.Bathrooms = n
+	}
 }
 
 func (doc *PCDoc) ParseDetail() (model.Flat, error) {
