@@ -16,7 +16,7 @@ type Flat struct {
 	Country string
 	Pictures []ImgNode
 	Equipment []string
-	Area string
+	Area Area
 	Rooms int
 	Bathrooms int
 	Floor string
@@ -24,6 +24,12 @@ type Flat struct {
 	Furniture []string
 	Certify string
 	Age time.Time
+	Maintenance string
+}
+
+type Area struct {
+	Built float32
+	Util float32
 }
 
 type FlatReact func(*Flat) error

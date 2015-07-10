@@ -8,8 +8,8 @@ import (
 	"regexp"
 	"strings"
 	"strconv"
-	"golang.org/x/tools/go/exact"
 	"time"
+	"fmt"
 )
 
 const ID_SELECT = "[name*='IdPiso']"
@@ -35,6 +35,9 @@ const DATA_BATHS_KEY = "Superficie"
 const DATA_AGE_KEY = "Antigüedad"
 const DATA_MAINT_KEY = "Conservación"
 const DATA_N_REGEXP = "\\d+"
+const DATA_AREA_REGEXP = "((\\d+) m² construidos)?( / )?((\\d+) m² útiles)?"
+const DATA_MORE_AGE_REGEXP = "más de (\\d+) años"
+const DATA_LESS_AGE_REGEXP = "menos de (\\d+) años"
 
 func tSizePhotoUrl(url string, size string) string {
 	r := regexp.MustCompile(PHOTO_URL_PRE + PHOTO_REGEXP)
@@ -106,28 +109,31 @@ func getRef(dom *goquery.Document) (string, error) {
 	return val, nil
 }
 
-func basicDetails(result map[string]interface{}, dom *goquery.Document) map[string]interface{} {
+func basicDetails(result map[string]interface{}, dom *goquery.Selection) map[string]interface{} {
 	re := regexp.MustCompile(DATA_LINE_REGEXP)
-	dom.Find(DATA_LINE_SELECT).Each(func (i int, s *goquery.Selection) {
+	dom.Find(DATA_LINE_SELECT).Each(func(i int, s *goquery.Selection) {
 		match := re.FindStringSubmatch(s.Text())
-		if match[1] != "" { result = append(result, match[2]) }
+		if match[1] != "" { result[match[1]] = match[2] }
 	})
 
 	return result
 }
 
-func listDetails(result map[string]interface{}, key string, dom *goquery.Document) map[string]interface{} {
-	result[key] = make([]string)
-	dom.Find(DATA_LINE_SELECT).Each(func (i int, s *goquery.Selection) {
-		result[key] = append(result[key], s.Text())
+func listDetails(result map[string]interface{}, dom *goquery.Selection, key string) map[string]interface{} {
+	details := make([]string, 10)
+	dom.Find(DATA_LINE_SELECT).Each(func(i int, s *goquery.Selection) {
+		details = append(details, s.Text())
 	})
+	if len(details) > 0 {
+		result[key] = details
+	}
 
 	return result
 }
 
 func details(dom *goquery.Document) map[string]interface{} {
 	result := make(map[string]interface{})
-	dom.Find(DATA_SELECT).Each(func (num int, s *goquery.Selection) {
+	dom.Find(DATA_SELECT).Each(func(num int, s *goquery.Selection) {
 		title := s.Find(DATA_TITL_SELECT).First().Text()
 		switch {
 		case strings.Contains(title, DATA_TITL_BASIC):
@@ -144,34 +150,63 @@ func details(dom *goquery.Document) map[string]interface{} {
 	return result
 }
 
-func convAge(age string) time.Time{
+func convAge(age string) (time.Time, error) {
+	var match []string
+	var t time.Time
+	reMore := regexp.MustCompile(DATA_MORE_AGE_REGEXP)
+	reLess := regexp.MustCompile(DATA_LESS_AGE_REGEXP)
+	switch {
+	case reMore.MatchString(age):
+		match = reMore.FindStringSubmatch(age)
+		year, _ := strconv.Atoi(match[1])
+		t = time.Now().AddDate(-year, 0, -1)
+	case reLess.MatchString(age):
+		match = reLess.FindStringSubmatch(age)
+		year, _ := strconv.Atoi(match[1])
+		t = time.Now().AddDate(-year, 0, 1)
+	default:
+		return t, errors.New("No matching time regexp")
+	}
 
+	return t, nil
+}
+
+func convArea(areaStr string) (model.Area, error) {
+	var area model.Area
+	re := regexp.MustCompile(DATA_AREA_REGEXP)
+	match := re.FindStringSubmatch(areaStr)
+	fmt.Println(match)
+
+	return area, nil
 }
 
 func mapDetails(flat model.Flat, raw map[string]interface{}) model.Flat {
 	re := regexp.MustCompile(DATA_N_REGEXP)
-	if area, exists := raw[DATA_AREA_KEY]; exists {
-		flat.Area = area
+	if areaInt, exists := raw[DATA_AREA_KEY]; exists {
+		if areaStr, ok := areaInt.(string); ok {
+			area, _ := convArea(areaStr)
+			flat.Area = area
+		}
 	}
-	if val, exists := raw[DATA_ROOMS_KEY]; exists {
-		match := re.FindString(val)
-		n, _ := strconv.Atoi(match)
-		flat.Rooms = n
+	if roomsInt, exists := raw[DATA_ROOMS_KEY]; exists {
+		if roomsStr, ok := roomsInt.(string); ok {
+			match := re.FindString(roomsStr)
+			n, _ := strconv.Atoi(match)
+			flat.Rooms = n
+		}
 	}
-	if val, exists := raw[DATA_BATHS_KEY]; exists {
-		match := re.FindString(val)
+	if bathsInt, exists := raw[DATA_BATHS_KEY]; exists {
+		if bathsStr, ok := bathsInt.(string); ok {
+		match := re.FindString(bathsStr)
 		n, _ := strconv.Atoi(match)
 		flat.Bathrooms = n
 	}
 	if val, exists := raw[DATA_AGE_KEY]; exists {
-		match := re.FindString(val)
-		n, _ := strconv.Atoi(match)
-		flat.Bathrooms = n
+		n, _ := convAge(val)
+		flat.Age = n
 	}
 	if val, exists := raw[DATA_MAINT_KEY]; exists {
-		match := re.FindString(val)
-		n, _ := strconv.Atoi(match)
-		flat.Bathrooms = n
+		flat.Maintenance = val
 	}
 
 	return flat
@@ -194,6 +229,8 @@ func (doc *PCDoc) ParseDetail() (model.Flat, error) {
 	flat.Telephone = tel
 	desc := descBody(doc.dom)
 	flat.Description = desc
+	details := details(doc.dom)
+	flat = mapDetails(flat, details)
 
 	return flat, nil
 }
