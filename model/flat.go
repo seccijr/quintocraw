@@ -23,7 +23,7 @@ type Flat struct {
 	Exterior []string
 	Furniture []string
 	Certify string
-	Age time.Duration
+	Age time.Time
 }
 
 type FlatReact func(*Flat) error

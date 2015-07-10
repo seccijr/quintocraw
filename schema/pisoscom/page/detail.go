@@ -9,6 +9,7 @@ import (
 	"strings"
 	"strconv"
 	"golang.org/x/tools/go/exact"
+	"time"
 )
 
 const ID_SELECT = "[name*='IdPiso']"
@@ -32,6 +33,7 @@ const DATA_AREA_KEY = "Superficie"
 const DATA_ROOMS_KEY = "Superficie"
 const DATA_BATHS_KEY = "Superficie"
 const DATA_AGE_KEY = "Antigüedad"
+const DATA_MAINT_KEY = "Conservación"
 const DATA_N_REGEXP = "\\d+"
 
 func tSizePhotoUrl(url string, size string) string {
@@ -142,6 +144,10 @@ func details(dom *goquery.Document) map[string]interface{} {
 	return result
 }
 
+func convAge(age string) time.Time{
+
+}
+
 func mapDetails(flat model.Flat, raw map[string]interface{}) model.Flat {
 	re := regexp.MustCompile(DATA_N_REGEXP)
 	if area, exists := raw[DATA_AREA_KEY]; exists {
@@ -157,6 +163,18 @@ func mapDetails(flat model.Flat, raw map[string]interface{}) model.Flat {
 		n, _ := strconv.Atoi(match)
 		flat.Bathrooms = n
 	}
+	if val, exists := raw[DATA_AGE_KEY]; exists {
+		match := re.FindString(val)
+		n, _ := strconv.Atoi(match)
+		flat.Bathrooms = n
+	}
+	if val, exists := raw[DATA_MAINT_KEY]; exists {
+		match := re.FindString(val)
+		n, _ := strconv.Atoi(match)
+		flat.Bathrooms = n
+	}
+
+	return flat
 }
 
 func (doc *PCDoc) ParseDetail() (model.Flat, error) {
