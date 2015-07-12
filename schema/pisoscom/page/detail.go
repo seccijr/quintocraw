@@ -20,7 +20,7 @@ const TELF_ENC_SELECT = "[id='tlfEnc']"
 const TELF_TXT_SELECT = ".number.one"
 const INMO_SELECT = ".line.noMargin a[href^='/inmobiliaria']"
 const DESC_BOD_SELECT = ".descriptionBlock .description"
-const DATA_SELECT = "div.characteristics > div.column > div.block"
+const DATA_SELECT = "div.block"
 const DATA_TITL_BASIC = "Datos básicos"
 const DATA_TITL_EQUIP = "Equipamiento e instalaciones"
 const DATA_TITL_CERTIFY = "Certificado energético"
@@ -197,16 +197,21 @@ func mapDetails(flat model.Flat, raw map[string]interface{}) model.Flat {
 	}
 	if bathsInt, exists := raw[DATA_BATHS_KEY]; exists {
 		if bathsStr, ok := bathsInt.(string); ok {
-		match := re.FindString(bathsStr)
-		n, _ := strconv.Atoi(match)
-		flat.Bathrooms = n
+			match := re.FindString(bathsStr)
+			n, _ := strconv.Atoi(match)
+			flat.Bathrooms = n
+		}
 	}
-	if val, exists := raw[DATA_AGE_KEY]; exists {
-		n, _ := convAge(val)
-		flat.Age = n
+	if ageInt, exists := raw[DATA_AGE_KEY]; exists {
+		if ageStr, ok := ageInt.(string); ok {
+			n, _ := convAge(ageStr)
+			flat.Age = n
+		}
 	}
-	if val, exists := raw[DATA_MAINT_KEY]; exists {
-		flat.Maintenance = val
+	if maintInt, exists := raw[DATA_MAINT_KEY]; exists {
+		if maintStr, ok := maintInt.(string); ok {
+			flat.Maintenance = maintStr
+		}
 	}
 
 	return flat
@@ -230,6 +235,7 @@ func (doc *PCDoc) ParseDetail() (model.Flat, error) {
 	desc := descBody(doc.dom)
 	flat.Description = desc
 	details := details(doc.dom)
+	fmt.Println(details)
 	flat = mapDetails(flat, details)
 
 	return flat, nil

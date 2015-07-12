@@ -16,7 +16,7 @@ func main() {
 	session.SetMode(mgo.Monotonic, true)
 	c := session.DB("test").C("flat")
 	flatsRepo := mongo.MFlatRepo{c}
-	pcConfig, err := pisoscom.ReadConfig("schemas/pisoscom/params.json")
+	pcConfig, err := pisoscom.ReadConfig("/home/secci/Gorkspace/src/github.com/seccijr/quintocrawl/schema/pisoscom/params.json")
 
 	if err != nil {
 		panic(err)

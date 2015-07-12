@@ -46,10 +46,11 @@ func (broker PCBroker) hub(pcg *page.PCDoc) []string {
 		var flat model.Flat
 		flat, err = pcg.ParseDetail()
 		if err == nil {
-			err = broker.Flats.Save(flat)
+//			err = broker.Flats.Save(flat)
+			fmt.Println(flat)
 		}
 		if err != nil {
-			fmt.Println(err)
+			panic(err)
 		}
 		break
 	}
