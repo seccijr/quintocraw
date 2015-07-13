@@ -6,7 +6,6 @@ import (
 	"github.com/seccijr/quintocrawl/model"
 	"github.com/seccijr/quintocrawl/schema/pisoscom/page"
 	"github.com/seccijr/quintocrawl/client"
-	"fmt"
 )
 
 type PCBroker struct {
@@ -43,11 +42,11 @@ func (broker PCBroker) hub(pcg *page.PCDoc) []string {
 		break
 	case pcg.IsDetail():
 		var err error
-		var flat model.Flat
-		flat, err = pcg.ParseDetail()
+//		var flat model.Flat
+//		flat, err = pcg.ParseDetail()
+		_, err = pcg.ParseDetail()
 		if err == nil {
 //			err = broker.Flats.Save(flat)
-			fmt.Println(flat)
 		}
 		if err != nil {
 			panic(err)

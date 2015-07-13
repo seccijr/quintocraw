@@ -19,17 +19,28 @@ type Flat struct {
 	Area Area
 	Rooms int
 	Bathrooms int
-	Floor string
+	Floor int
 	Exterior []string
 	Furniture []string
 	Certify string
 	Age time.Time
 	Maintenance string
+	ComFees PriceRange
 }
 
 type Area struct {
-	Built float32
-	Util float32
+	Built float64
+	Util float64
+}
+
+type Price struct {
+	Currency string
+	Amount float64
+}
+
+type PriceRange struct {
+	From Price
+	To Price
 }
 
 type FlatReact func(*Flat) error
