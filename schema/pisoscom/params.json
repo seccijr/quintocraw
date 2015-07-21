@@ -32,5 +32,31 @@
     "Host": "www.pisos.com",
     "Scheme": "http",
     "Path": "comprar/piso-puerta_del_angel-945856908493223_109700"
+  },
+  "Attributes": {
+    "Host": "gestion.pisos.com",
+    "Scheme": "http",
+    "Path": "HTMLHandler.aspx",
+    "RawQuery": "ctrl=~/PTA/Controles/ctrlNCaracteristicas"
+  },
+  "PTA": {
+    "Host": "gestion.pisos.com",
+    "Scheme": "http",
+    "Path": "ws/wspta.asmx"
+  },
+  "Geo": {
+    "Host": "gestion.pisos.com",
+    "Scheme": "http",
+    "Path": "ws/wsgeo.asmx"
+  },
+  "CrossDomnain": {
+    "Host": "wsrp.pisos.com",
+    "Scheme": "http",
+    "Path": "wsCrossDomain.asmx"
+  },
+  "Promos": {
+    "Host": "wsrp.pisos.com",
+    "Scheme": "http",
+    "Path": "wsPromos.asmx"
   }
 }

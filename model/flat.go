@@ -9,22 +9,22 @@ type Flat struct {
 	Price float32
 	Agency bool
 	Description string
+	Neighbourhood string
 	District string
 	City string
 	Province string
 	State string
 	Country string
 	Pictures []ImgNode
-	Equipment []string
 	Area Area
 	Rooms int
 	Bathrooms int
 	Floor int
+	Age time.Time
+	Maintenance string
 	Exterior []string
 	Furniture []string
 	Certify string
-	Age time.Time
-	Maintenance string
 	ComFees PriceRange
 }
 
