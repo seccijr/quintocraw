@@ -1,0 +1,513 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+    <div id="pnlAddControl">
+        <div class="StateFeature">
+            <div id="pnlCaracteristicasDelInmueble" style="clear:both;">
+                <div id="divMandatory">
+                    <div class="DescCampo PrimerCampo" style="width:170px; margin-top:6px;"><span
+                            id="ctl01_lblSuperficieContruida"><span
+                            class='Asterisco'>*</span> Superficie construida</span></div>
+                    <div class="DescCampo DerCampo Short" style="width:330px;"><input name="ctl01$SuperficieContruida"
+                                                                                      type="text"
+                                                                                      id="ctl01_SuperficieContruida"
+                                                                                      onkeypress="if (ScriptsLoaded()){ return GUI.FrmValidador.prototype.OnlyNumberValidate(event); }else{ return false; }"
+                                                                                      maxlength="7"
+                                                                                      onblur="javascript:$.ctrlCaracteristicas.BlurMandatory(this);"/>
+                    </div>
+                    <div class='limpiaFloats'></div>
+                </div>
+                <div id="divMandatory">
+                    <div class="DescCampo PrimerCampo" style="width:170px; margin-top:6px;"><span
+                            id="ctl01_lblSuperficieUtil"><span class='Asterisco'>*</span> Superficie útil</span></div>
+                    <div class="DescCampo DerCampo Short" style="width:330px;"><input name="ctl01$SuperficieUtil"
+                                                                                      type="text"
+                                                                                      id="ctl01_SuperficieUtil"
+                                                                                      onkeypress="if (ScriptsLoaded()){ return GUI.FrmValidador.prototype.OnlyNumberValidate(event); }else{ return false; }"
+                                                                                      maxlength="7"
+                                                                                      onblur="javascript:$.ctrlCaracteristicas.BlurMandatory(this);"/>
+                    </div>
+                    <div class='limpiaFloats'></div>
+                </div>
+                <div id="divMandatory">
+                    <div class="Container"><span id="ctl01_lblNumHabitaciones"><span class='Asterisco'>*</span> Habitaciones </span>
+                        <table id="ctl01_NumHabitaciones" onblur="javascript:$.ctrlCaracteristicas.BlurMandatory(this);"
+                               border="0">
+                            <tr>
+                                <td><span style="margin-top:5px;"><input id="ctl01_NumHabitaciones_0" type="radio"
+                                                                         name="ctl01$NumHabitaciones"
+                                                                         value="0 habitaciones"/><label
+                                        for="ctl01_NumHabitaciones_0">0</label></span></td>
+                                <td><span style="margin-top:5px;"><input id="ctl01_NumHabitaciones_1" type="radio"
+                                                                         name="ctl01$NumHabitaciones"
+                                                                         value="1 habitación"/><label
+                                        for="ctl01_NumHabitaciones_1">1</label></span></td>
+                                <td><span style="margin-top:5px;"><input id="ctl01_NumHabitaciones_2" type="radio"
+                                                                         name="ctl01$NumHabitaciones"
+                                                                         value="2 habitaciones"/><label
+                                        for="ctl01_NumHabitaciones_2">2</label></span></td>
+                                <td><span style="margin-top:5px;"><input id="ctl01_NumHabitaciones_3" type="radio"
+                                                                         name="ctl01$NumHabitaciones"
+                                                                         value="3 habitaciones"/><label
+                                        for="ctl01_NumHabitaciones_3">3</label></span></td>
+                                <td><span style="margin-top:5px;"><input id="ctl01_NumHabitaciones_4" type="radio"
+                                                                         name="ctl01$NumHabitaciones"
+                                                                         value="4 habitaciones"/><label
+                                        for="ctl01_NumHabitaciones_4">4</label></span></td>
+                                <td><span style="margin-top:5px;"><input id="ctl01_NumHabitaciones_5" type="radio"
+                                                                         name="ctl01$NumHabitaciones"
+                                                                         value="5 habitaciones o más"/><label
+                                        for="ctl01_NumHabitaciones_5">5 o más</label></span></td>
+                            </tr>
+                        </table>
+                        <div class='limpiaFloats'></div>
+                    </div>
+                </div>
+                <div id="divMandatory">
+                    <div class="Container"><span id="ctl01_lblNumBanos"><span class='Asterisco'>*</span> Baños </span>
+                        <table id="ctl01_NumBanos" onblur="javascript:$.ctrlCaracteristicas.BlurMandatory(this);"
+                               border="0">
+                            <tr>
+                                <td><span style="margin-top:5px;"><input id="ctl01_NumBanos_0" type="radio"
+                                                                         name="ctl01$NumBanos" value="0 baños"/><label
+                                        for="ctl01_NumBanos_0">0</label></span></td>
+                                <td><span style="margin-top:5px;"><input id="ctl01_NumBanos_1" type="radio"
+                                                                         name="ctl01$NumBanos" value="1 baño"/><label
+                                        for="ctl01_NumBanos_1">1</label></span></td>
+                                <td><span style="margin-top:5px;"><input id="ctl01_NumBanos_2" type="radio"
+                                                                         name="ctl01$NumBanos" value="2 baños"/><label
+                                        for="ctl01_NumBanos_2">2</label></span></td>
+                                <td><span style="margin-top:5px;"><input id="ctl01_NumBanos_3" type="radio"
+                                                                         name="ctl01$NumBanos"
+                                                                         value="3 baños o más"/><label
+                                        for="ctl01_NumBanos_3">3 o más</label></span></td>
+                            </tr>
+                        </table>
+                        <div class='limpiaFloats'></div>
+                    </div>
+                </div>
+                <div id="divMandatory">
+                    <div class="Container"><span id="ctl01_lblPlanta"><span
+                            class='Asterisco'>*</span> Planta </span><select name="ctl01$Planta" id="ctl01_Planta"
+                                                                             onblur="javascript:$.ctrlCaracteristicas.BlurMandatory(this);"
+                                                                             style="width:150px;">
+                        <option selected="selected" value="60">Seleccionar</option>
+                        <option value="61">S&#243;tano</option>
+                        <option value="62">Subs&#243;tano</option>
+                        <option value="63">Bajo</option>
+                        <option value="64">Entresuelo</option>
+                        <option value="65">Principal</option>
+                        <option value="66">1</option>
+                        <option value="67">2</option>
+                        <option value="68">3</option>
+                        <option value="69">4</option>
+                        <option value="70">5</option>
+                        <option value="71">6</option>
+                        <option value="72">7</option>
+                        <option value="73">8</option>
+                        <option value="74">9</option>
+                        <option value="75">10</option>
+                        <option value="76">11</option>
+                        <option value="77">12</option>
+                        <option value="78">13</option>
+                        <option value="79">14</option>
+                        <option value="80">15</option>
+                        <option value="81">16</option>
+                        <option value="82">17</option>
+                        <option value="83">18</option>
+                        <option value="84">19</option>
+                        <option value="85">20</option>
+                        <option value="86">M&#225;s de 20</option>
+
+                    </select>
+
+                        <div class='limpiaFloats'></div>
+                    </div>
+                </div>
+                <div id="divMandatory">
+                    <div class="Container"><span id="ctl01_lblAntiguedad"><span
+                            class='Asterisco'>*</span> Antigüedad </span><select name="ctl01$Antiguedad"
+                                                                                 id="ctl01_Antiguedad"
+                                                                                 onblur="javascript:$.ctrlCaracteristicas.BlurMandatory(this);"
+                                                                                 style="width:150px;">
+                        <option selected="selected" value="120">Seleccionar</option>
+                        <option value="121">Menos de 5 a&#241;os</option>
+                        <option value="122">Entre 5 y 10 a&#241;os</option>
+                        <option value="123">Entre 10 y 20 a&#241;os</option>
+                        <option value="124">Entre 20 y 30 a&#241;os</option>
+                        <option value="125">Entre 30 y 50 a&#241;os</option>
+                        <option value="126">M&#225;s de 50 a&#241;os</option>
+
+                    </select>
+
+                        <div class='limpiaFloats'></div>
+                    </div>
+                    <div class='limpiaFloats'></div>
+                </div>
+                <div id="divMandatory">
+                    <div class="Container"><span id="ctl01_lblEstadoConservacion"><span class='Asterisco'>*</span> Conservación </span><select
+                            name="ctl01$EstadoConservacion" id="ctl01_EstadoConservacion"
+                            onblur="javascript:$.ctrlCaracteristicas.BlurMandatory(this);" style="width:150px;">
+                        <option selected="selected" value="520">Seleccionar</option>
+                        <option value="521">A estrenar</option>
+                        <option value="522">En buen estado</option>
+                        <option value="523">A reformar</option>
+                        <option value="524">Reformado</option>
+
+                    </select>
+
+                        <div class='limpiaFloats'></div>
+                    </div>
+                </div>
+                <div class="FormTitle MTExtra" id="titCaracts">Certificación energética</div>
+                <div id="divMandatory">
+                    <div class="Container"><span id="ctl01_lblEnergiaEstado"><span class='Asterisco'>*</span> Estado de la certificación </span><select
+                            name="ctl01$EnergiaEstado" id="ctl01_EnergiaEstado"
+                            onblur="javascript:$.ctrlCaracteristicas.BlurMandatory(this);" style="width:150px;">
+                        <option value="540">Seleccionar</option>
+                        <option value="550">Disponible</option>
+                        <option value="551">Pendiente completar</option>
+                        <option value="548">En tr&#225;mite</option>
+                        <option value="549">No indicado</option>
+                        <option value="552">Exento</option>
+
+                    </select>
+
+                        <div class='limpiaFloats'></div>
+                    </div>
+                </div>
+                <div id="divMandatory">
+                    <div class="Container"><span id="ctl01_lblEnergiaConsumoCategoria"><span class='Asterisco'>*</span> Nivel de consumo </span><select
+                            name="ctl01$EnergiaConsumoCategoria" id="ctl01_EnergiaConsumoCategoria"
+                            onblur="javascript:$.ctrlCaracteristicas.BlurMandatory(this);" style="width:150px;">
+                        <option value="540">Seleccionar</option>
+                        <option value="541">Nivel de certificaci&#243;n A</option>
+                        <option value="542">Nivel de certificaci&#243;n B</option>
+                        <option value="543">Nivel de certificaci&#243;n C</option>
+                        <option value="544">Nivel de certificaci&#243;n D</option>
+                        <option value="545">Nivel de certificaci&#243;n E</option>
+                        <option value="546">Nivel de certificaci&#243;n F</option>
+                        <option value="547">Nivel de certificaci&#243;n G</option>
+
+                    </select><a rel="nofollow" class="PopUpImgConsumo lnkBox">Qué es y dónde encontrarlo</a>
+
+                        <div class='limpiaFloats'></div>
+                    </div>
+                </div>
+                <div id="divMandatory">
+                    <div class="Container"><span id="ctl01_lblEnergiaConsumoValor"><span class="supFix"><span
+                            class='Asterisco'>*</span> Consumo <br/>(Kwh/m<sup>2</sup>año)</span></span><input
+                            name="ctl01$EnergiaConsumoValor" type="text" maxlength="6" id="ctl01_EnergiaConsumoValor"
+                            onkeypress="if (ScriptsLoaded()){ return GUI.FrmValidador.prototype.NumberValidatePlusComma(event) || GUI.FrmValidador.prototype.NumberValidateMask(event, $(this).val(),&#39;###.##&#39;); }else{ return false; }"
+                            onblur="javascript:$.ctrlCaracteristicas.BlurMandatory(this);" style="width:150px;"/>
+
+                        <div class='limpiaFloats'></div>
+                    </div>
+                    <div class='limpiaFloats'></div>
+                </div>
+                <div id="divMandatory">
+                    <div class="Container"><span id="ctl01_lblEnergiaEmisionesCategoria"><span
+                            class='Asterisco'>*</span> Nivel de emisiones </span><select
+                            name="ctl01$EnergiaEmisionesCategoria" id="ctl01_EnergiaEmisionesCategoria"
+                            onblur="javascript:$.ctrlCaracteristicas.BlurMandatory(this);" style="width:150px;">
+                        <option value="540">Seleccionar</option>
+                        <option value="541">Nivel de certificaci&#243;n A</option>
+                        <option value="542">Nivel de certificaci&#243;n B</option>
+                        <option value="543">Nivel de certificaci&#243;n C</option>
+                        <option value="544">Nivel de certificaci&#243;n D</option>
+                        <option value="545">Nivel de certificaci&#243;n E</option>
+                        <option value="546">Nivel de certificaci&#243;n F</option>
+                        <option value="547">Nivel de certificaci&#243;n G</option>
+
+                    </select><a rel="nofollow" class="PopUpImgEmisiones lnkBox">Qué es y dónde encontrarlo</a>
+
+                        <div class='limpiaFloats'></div>
+                    </div>
+                </div>
+                <div id="divMandatory">
+                    <div class="Container"><span id="ctl01_lblEnergiaEmisionesValor"><span class="supFix"><span
+                            class='Asterisco'>*</span> Emisiones <br/>(Kg CO2/m<sup>2</sup>año)</span></span><input
+                            name="ctl01$EnergiaEmisionesValor" type="text" maxlength="6"
+                            id="ctl01_EnergiaEmisionesValor"
+                            onkeypress="if (ScriptsLoaded()){ return GUI.FrmValidador.prototype.NumberValidatePlusComma(event) || GUI.FrmValidador.prototype.NumberValidateMask(event, $(this).val(),&#39;###.##&#39;); }else{ return false; }"
+                            onblur="javascript:$.ctrlCaracteristicas.BlurMandatory(this);" style="width:150px;"/>
+
+                        <div class='limpiaFloats'></div>
+                    </div>
+                    <div class='limpiaFloats'></div>
+                </div>
+                <div class="FormTitle MTExtra" id="titCaracts" style="">Características</div>
+                <div id="divNoMandatory" style="">
+                    <div class="Container"><span id="ctl01_lblJardin">Jardín </span><select name="ctl01$Jardin"
+                                                                                            id="ctl01_Jardin"
+                                                                                            style="width:150px;">
+                        <option value="140">Seleccionar</option>
+                        <option value="141">Comunitario</option>
+                        <option value="142">Propio</option>
+
+                    </select>
+
+                        <div class='limpiaFloats'></div>
+                    </div>
+                </div>
+                <div id="divNoMandatory" style="">
+                    <div class="Container"><span id="ctl01_lblGaraje">Garaje </span><select name="ctl01$Garaje"
+                                                                                            id="ctl01_Garaje"
+                                                                                            style="width:150px;">
+                        <option value="160">Seleccionar</option>
+                        <option value="161">1</option>
+                        <option value="162">2</option>
+                        <option value="163">M&#225;s de 2</option>
+
+                    </select>
+
+                        <div class='limpiaFloats'></div>
+                    </div>
+                </div>
+                <div id="divNoMandatory" style="">
+                    <div class="Container"><span id="ctl01_lblArmariosEmpotrados">Armarios empotrados </span><select
+                            name="ctl01$ArmariosEmpotrados" id="ctl01_ArmariosEmpotrados" style="width:150px;">
+                        <option value="200">Seleccionar</option>
+                        <option value="201">1</option>
+                        <option value="202">2</option>
+                        <option value="203">M&#225;s de 2</option>
+
+                    </select>
+
+                        <div class='limpiaFloats'></div>
+                    </div>
+                </div>
+                <div id="divNoMandatory" style="">
+                    <div class="Container"><span id="ctl01_lblCalefaccion">Calefacción </span><select
+                            name="ctl01$Calefaccion" id="ctl01_Calefaccion" style="width:150px;">
+                        <option value="220">Seleccionar</option>
+                        <option value="221">Central</option>
+                        <option value="222">El&#233;ctrica</option>
+                        <option value="223">Gas natural</option>
+                        <option value="224">Gasoil</option>
+
+                    </select>
+
+                        <div class='limpiaFloats'></div>
+                    </div>
+                    <div class='limpiaFloats'></div>
+                </div>
+                <div id="divNoMandatory" style="">
+                    <div class="Container"><span id="ctl01_lblTipoSuelo">Tipo suelo </span><select
+                            name="ctl01$TipoSuelo" id="ctl01_TipoSuelo" style="width:150px;">
+                        <option value="240">Seleccionar</option>
+                        <option value="241">Gres</option>
+                        <option value="242">M&#225;rmol</option>
+                        <option value="243">Moqueta</option>
+                        <option value="244">Parquet</option>
+                        <option value="245">Tarima flotante</option>
+                        <option value="246">Tarima maciza</option>
+                        <option value="247">Terrazo</option>
+
+                    </select>
+
+                        <div class='limpiaFloats'></div>
+                    </div>
+                </div>
+                <div id="divNoMandatory" style="">
+                    <div class="Container"><span id="ctl01_lblCarpinteriaExterior">Carpintería exterior </span><select
+                            name="ctl01$CarpinteriaExterior" id="ctl01_CarpinteriaExterior" style="width:150px;">
+                        <option value="260">Seleccionar</option>
+                        <option value="261">Madera</option>
+                        <option value="262">Aluminio</option>
+                        <option value="263">PVC</option>
+
+                    </select>
+
+                        <div class='limpiaFloats'></div>
+                    </div>
+                </div>
+                <div id="divNoMandatory" style="">
+                    <div class="Container"><span id="ctl01_lblAireAcondicionado">Aire acondicionado </span><select
+                            name="ctl01$AireAcondicionado" id="ctl01_AireAcondicionado" style="width:150px;">
+                        <option value="280">Seleccionar</option>
+                        <option value="281">Fr&#237;o</option>
+                        <option value="282">Fr&#237;o y calor</option>
+
+                    </select>
+
+                        <div class='limpiaFloats'></div>
+                    </div>
+                </div>
+                <div id="divNoMandatory" style="">
+                    <div class="Container"><span id="ctl01_lblOrientacion">Orientación </span><select
+                            name="ctl01$Orientacion" id="ctl01_Orientacion" style="width:150px;">
+                        <option value="300">Seleccionar</option>
+                        <option value="301">Norte</option>
+                        <option value="302">Noreste</option>
+                        <option value="303">Este</option>
+                        <option value="304">Sureste</option>
+                        <option value="305">Sur</option>
+                        <option value="306">Suroeste</option>
+                        <option value="307">Oeste</option>
+                        <option value="308">Noroeste</option>
+                        <option value="309">Al mar</option>
+                        <option value="310">A la monta&#241;a</option>
+
+                    </select>
+
+                        <div class='limpiaFloats'></div>
+                    </div>
+                    <div class='limpiaFloats'></div>
+                </div>
+                <div id="divNoMandatory" style="">
+                    <div class="Container"><span id="ctl01_lblPiscina">Piscina </span><select name="ctl01$Piscina"
+                                                                                              id="ctl01_Piscina"
+                                                                                              style="width:150px;">
+                        <option value="321">Seleccionar</option>
+                        <option value="322">Propia</option>
+                        <option value="323">Comunitaria</option>
+
+                    </select>
+
+                        <div class='limpiaFloats'></div>
+                    </div>
+                </div>
+                <div id="divNoMandatory" style="">
+                    <div class="Container"><span id="ctl01_lblGastosDeComunidad">Gastos de comunidad </span><select
+                            name="ctl01$GastosDeComunidad" id="ctl01_GastosDeComunidad" style="width:150px;">
+                        <option value="340">Seleccionar</option>
+                        <option value="341">Entre 10 y 20 €</option>
+                        <option value="342">Entre 20 y 40 €</option>
+                        <option value="343">Entre 40 y 60 €</option>
+                        <option value="344">Entre 60 y 80 €</option>
+                        <option value="345">Entre 80 y 100 €</option>
+                        <option value="346">M&#225;s de 100 €</option>
+
+                    </select>
+
+                        <div class='limpiaFloats'></div>
+                    </div>
+                </div>
+                <div id="divNoMandatory" style="">
+                    <div class="Container"><span id="ctl01_lblLuz">Luz </span><select name="ctl01$Luz" id="ctl01_Luz"
+                                                                                      style="width:150px;">
+                        <option value="380">Seleccionar</option>
+                        <option value="381">Uni&#243;n Fenosa</option>
+                        <option value="382">Iberdrola</option>
+                        <option value="383">Endesa</option>
+                        <option value="384">Otra compa&#241;&#237;a</option>
+                        <option value="385">Sin luz</option>
+
+                    </select>
+
+                        <div class='limpiaFloats'></div>
+                    </div>
+                </div>
+                <div id="divNoMandatory" style="">
+                    <div class="Container"><span id="ctl01_lblGas">Gas </span><select name="ctl01$Gas" id="ctl01_Gas"
+                                                                                      style="width:150px;">
+                        <option value="400">Seleccionar</option>
+                        <option value="401">Gas Natural</option>
+                        <option value="402">Iberdrola</option>
+                        <option value="403">Endesa</option>
+                        <option value="404">Otra compa&#241;&#237;a</option>
+                        <option value="405">Sin gas</option>
+
+                    </select>
+
+                        <div class='limpiaFloats'></div>
+                    </div>
+                    <div class='limpiaFloats'></div>
+                </div>
+                <div class='limpiaFloats'></div>
+                <div class="PTA_Seleccionables" id="divNoMandatory" style="clear: both;">
+                    <div class="Column">
+                        <div class='FormLine Multiline'>
+                            <div class='Input'><input id="ctl01_Ascensor" type="checkbox" name="ctl01$Ascensor"/><label
+                                    for="Ascensor">Ascensor</label></div>
+                        </div>
+                        <div class='FormLine Multiline'>
+                            <div class='Input'><input id="ctl01_Trastero" type="checkbox" name="ctl01$Trastero"/><label
+                                    for="Trastero">Trastero</label></div>
+                        </div>
+                        <div class='FormLine Multiline'>
+                            <div class='Input'><input id="ctl01_Cocina" type="checkbox" name="ctl01$Cocina"/><label
+                                    for="Cocina">Cocina equipada</label></div>
+                        </div>
+                        <div class='FormLine Multiline'>
+                            <div class='Input'><input id="ctl01_Lavadero" type="checkbox" name="ctl01$Lavadero"/><label
+                                    for="Lavadero">Lavadero</label></div>
+                        </div>
+                        <div class='FormLine Multiline'>
+                            <div class='Input'><input id="ctl01_Comedor" type="checkbox" name="ctl01$Comedor"/><label
+                                    for="Comedor">Comedor</label></div>
+                        </div>
+                        <div class='FormLine Multiline'>
+                            <div class='Input'><input id="ctl01_Terraza" type="checkbox" name="ctl01$Terraza"/><label
+                                    for="Terraza">Terraza</label></div>
+                        </div>
+                        <div class='FormLine Multiline'>
+                            <div class='Input'><input id="ctl01_Muebles" type="checkbox" name="ctl01$Muebles"/><label
+                                    for="Muebles">Muebles</label></div>
+                        </div>
+                        <div class='FormLine Multiline'>
+                            <div class='Input'><input id="ctl01_PuertaBlindada" type="checkbox"
+                                                      name="ctl01$PuertaBlindada"/><label for="PuertaBlindada">Puerta
+                                blindada</label></div>
+                        </div>
+                        <div class='FormLine Multiline'>
+                            <div class='Input'><input id="ctl01_PorteroAutomatico" type="checkbox"
+                                                      name="ctl01$PorteroAutomatico"/><label for="PorteroAutomatico">Portero
+                                automático</label></div>
+                        </div>
+                    </div>
+                    <div class="Column">
+                        <div class='FormLine Multiline'>
+                            <div class='Input'><input id="ctl01_VidriosDobles" type="checkbox"
+                                                      name="ctl01$VidriosDobles"/><label for="VidriosDobles">Vidrios
+                                dobles</label></div>
+                        </div>
+                        <div class='FormLine Multiline'>
+                            <div class='Input'><input id="ctl01_Agua" type="checkbox" name="ctl01$Agua"/><label
+                                    for="Agua">Agua</label></div>
+                        </div>
+                        <div class='FormLine Multiline'>
+                            <div class='Input'><input id="ctl01_Chimenea" type="checkbox" name="ctl01$Chimenea"/><label
+                                    for="Chimenea">Chimenea</label></div>
+                        </div>
+                        <div class='FormLine Multiline'>
+                            <div class='Input'><input id="ctl01_Soleado" type="checkbox" name="ctl01$Soleado"/><label
+                                    for="Soleado">Soleado</label></div>
+                        </div>
+                        <div class='FormLine Multiline'>
+                            <div class='Input'><input id="ctl01_SistemaDeSeguridad" type="checkbox"
+                                                      name="ctl01$SistemaDeSeguridad"/><label for="SistemaDeSeguridad">Sist.
+                                de seguridad</label></div>
+                        </div>
+                        <div class='FormLine Multiline'>
+                            <div class='Input'><input id="ctl01_Telefono" type="checkbox" name="ctl01$Telefono"/><label
+                                    for="Telefono">Teléfono</label></div>
+                        </div>
+                        <div class='FormLine Multiline'>
+                            <div class='Input'><input id="ctl01_Balcon" type="checkbox" name="ctl01$Balcon"/><label
+                                    for="Balcon">Balcón</label></div>
+                        </div>
+                    </div>
+                    <div class="Column">
+                        <div class='FormLine Multiline'>
+                            <div class='Input'><input id="ctl01_AdaptadoAPersonasConDiscapacidad" type="checkbox"
+                                                      name="ctl01$AdaptadoAPersonasConDiscapacidad"/><label
+                                    for="AdaptadoAPersonasConDiscapacidad">Adpto. a discapacitados</label></div>
+                        </div>
+                    </div>
+                    <div class="Column">
+
+                    </div>
+                    <div class='limpiaFloats'></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</body>
+</html>

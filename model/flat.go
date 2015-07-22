@@ -22,15 +22,13 @@ type Flat struct {
 	Floor int
 	Age time.Time
 	Maintenance string
-	Exterior []string
-	Furniture []string
 	Certify string
 	ComFees PriceRange
 }
 
 type Area struct {
 	Built float64
-	Util float64
+	Use float64
 }
 
 type Price struct {
